@@ -10,3 +10,10 @@ Base.clamp(t::T, lo, hi::T) where {T <: AbstractTracer} = first_order_or(t, hi)
 function Base.clamp(t::T, lo::T, hi::T) where {T <: AbstractTracer}
     return first_order_or(t, first_order_or(lo, hi))
 end
+
+# For `fma(x, y, z)`, just fall back on `x * y + z`.
+fma_types = (Number, Union{AbstractTracer, Dual})
+for (Tx, Ty, Tz) in Iterators.product(fma_types, fma_types, fma_types)
+    (Tx == Ty == Tz == Number) && continue # avoid piracy
+    Base.fma(x::Tx, y::Ty, z::Tz) = x * y + z # otherwise just fallback
+end
