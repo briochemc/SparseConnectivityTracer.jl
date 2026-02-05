@@ -12,4 +12,4 @@ function Base.clamp(t::T, lo::T, hi::T) where {T <: AbstractTracer}
 end
 
 # For `fma(x, y, z)`, just fall back on `x * y + z`.
-Base.fma(x::T, y::T, z::T) where {T<:AbstractTracer} = x * y + z
+Base.fma(x::T, y::T, z::T) where {T <: Union{AbstractTracer, Dual}} = x * y + z
