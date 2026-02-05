@@ -12,8 +12,4 @@ function Base.clamp(t::T, lo::T, hi::T) where {T <: AbstractTracer}
 end
 
 # For `fma(x, y, z)`, just fall back on `x * y + z`.
-fma_types = (Number, Union{AbstractTracer, Dual})
-for (Tx, Ty, Tz) in Iterators.product(fma_types, fma_types, fma_types)
-    (Tx == Ty == Tz == Number) && continue # avoid piracy
-    Base.fma(x::Tx, y::Ty, z::Tz) = x * y + z # otherwise just fallback
-end
+Base.fma(x::T, y::T, z::T) where {T<:AbstractTracer} = x * y + z
